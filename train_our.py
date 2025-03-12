@@ -210,9 +210,6 @@ def train_or_eval_graph_model(model, clip_model, loss_function, dataloader, epoc
         elif args.multi_modal and args.mm_fusion_mthd=='concat_DHT':
             log_prob, neg_log_prob, neg_log_prob2, neg_log_prob3, features_a, features_l, features_v, e_i, e_n, e_t, e_l = model([textf1,textf2,textf3,textf4], qmask, umask, lengths, Sentence, clip_model, acouf, visuf, epoch)
             # log_prob, features_a, features_l, features_v, e_i, e_n, e_t, e_l = model([textf1, textf2, textf3, textf4], qmask, umask, lengths, Sentence, clip_model, acouf, visuf, epoch)
-
-            '''CLIP'''
-            # logit_img2text, text_features, image_features = clip_model(visuf, text) # visuf torch.Size([110, 16, 342]) , text  torch.Size([110, 16, 1024])
         else:
             log_prob, e_i, e_n, e_t, e_l = model(textf, qmask, umask, lengths)
         label = torch.cat([label[j][:lengths[j]] for j in range(len(label))])
@@ -233,8 +230,6 @@ def train_or_eval_graph_model(model, clip_model, loss_function, dataloader, epoc
         l2 = (F.cross_entropy(logits2, labels_2) + F.cross_entropy(logits2.t(), labels_2)) / 2
 
         loss = loss+loss2+loss3+loss4+l+l2
-        # loss = loss+l+l2
-
         preds.append(torch.argmax(log_prob, 1).cpu().numpy())
         labels.append(label.cpu().numpy())
         losses.append(loss.item())
