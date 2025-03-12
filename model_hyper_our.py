@@ -135,23 +135,15 @@ class HyperGCN(nn.Module):
 
     def utterance_selector(self, key, context):
         '''
-        原论文的
-        :param key: (batch, dim)
-        :param context: (batch, utts, dim)
-        :return:(batch, utts)
-        '''
-        '''
         Our
         :param key: (dim)
         :param context: (utts, dim)
         :return:(utts)
         '''
-        # torch.norm即范数，dim=2是2范数;  torch.einsum张量乘积运算
         s1 = torch.einsum("bu,u->b", context, key)/(1e-6 + torch.norm(context, dim=-1) * torch.norm(key, dim=-1, keepdim=True)) # 对应论文中公式(4):语义相关向量,list 类型
-        # print(len(s1))
         return s1
 
-    def utterance_selector_2(self, a, b): # 与utterance_selector实现相同的功能，任选其一即可
+    def utterance_selector_2(self, a, b): 
         """
             Computes the cosine similarity cos_sim(a[i], b[j]) for all i and j.
             :return: Matrix with res[i][j]  = cos_sim(a[i], b[j])
@@ -290,9 +282,7 @@ class HyperGCN(nn.Module):
             score1.append(s1)  # list类型：[utt_len*3]
         s1 = torch.cat(score1, dim=0)  # [utt_len*3, utt_len*3]
         edge_index1 = (s1 > 0).nonzero(as_tuple=False).t().contiguous()  # torch.Size([2, 4604671])
-        # 方式1 直接相乘(效果不好)
-        filter_output = torch.matmul(s1, x1)  # 与gnn_features维度保持一致
-        # 方式2 计算归一化的注意力权重，可以使用 softmax 函数
+        # 计算归一化的注意力权重，可以使用 softmax 函数
         attention_weights = F.softmax(s1, dim=1)  # 在维度1上应用 softmax
         weighted_features = torch.matmul(attention_weights, x1)  # 注意力权重矩阵与特征矩阵相乘
 
@@ -300,12 +290,7 @@ class HyperGCN(nn.Module):
         for kk in range(self.num_K):
             gnn_out_2 = gnn_out_2 + getattr(self, 'conv%d' % (kk + 1))(gnn_out_2, gnn_edge_index)
 
-        # neg_gnn_out_2 = self.corruption(gnn_out_2) # 负样本
-
-        out3 = torch.cat([out, gnn_out_2], dim=1) # 69%
-        # out3 = torch.cat([weighted_features, gnn_out_2], dim=1)  # 69%
-
-        # neg_out3 = torch.cat([neg_out, neg_gnn_out_2], dim=1)
+        out3 = torch.cat([out, gnn_out_2], dim=1) 
         if self.use_residue:
             out3 = torch.cat([features, out3], dim=-1)
 
@@ -319,7 +304,7 @@ class HyperGCN(nn.Module):
             # 计算归一化的注意力权重，可以使用 softmax 函数
             attention_weights = F.softmax(s2, dim=0)  # 在维度0上应用 softmax
             # 将注意力权重应用于特征向量
-            weighted_features = attention_weights.unsqueeze(-1) * x1  # 在最后一个维度上进行加权, [2607, 512]
+            weighted_features = attention_weights.unsqueeze(-1) * x1  
         elif num_modality == 1:
             s2 = self.get_batch_entropy_1(Sentence).to(device)
             # 计算归一化的注意力权重，可以使用 softmax 函数
@@ -329,10 +314,7 @@ class HyperGCN(nn.Module):
         gnn_out_3 = weighted_features
         for kk in range(self.num_K):
             gnn_out_3 = gnn_out_3 + getattr(self, 'conv%d' % (kk + 1))(gnn_out_3, gnn_edge_index)
-        # out4 = torch.cat([out, gnn_out_3], dim=1) # 69%
-        # print("---------")
-        # print(gnn_out_3.shape) #[178, 512]
-        out4 = torch.cat([weighted_features, gnn_out_3], dim=1)  # 69.%
+        out4 = torch.cat([weighted_features, gnn_out_3], dim=1) 
 
         if self.use_residue:
             out4 = torch.cat([features, out4], dim=-1)
