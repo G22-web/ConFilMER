@@ -869,13 +869,7 @@ class Model(nn.Module):
                 emotions_feat = nn.ReLU()(emotions_feat)
                 log_prob = F.log_softmax(self.hidfc(self.smax_fc(emotions_feat)), 1)
         elif self.graph_type=='hyper':
-            # print("输出查看---------：")
-            # print(features_a.shape) # torch.Size([869, 512])
-            # print(features_v.shape) # torch.Size([869, 512])
-            # print(features_l.shape) # torch.Size([869, 512])
-
             emotions_feat, neg_emotions_feat,  neg_emotions_feat2, neg_emotions_feat3 = self.graph_model(features_a, features_v, features_l, seq_lengths, qmask, epoch, Sentence)
-            # emotions_feat = self.graph_model(features_a, features_v, features_l, seq_lengths, qmask, epoch, Sentence)
 
             emotions_feat = self.dropout_(emotions_feat)
             emotions_feat = nn.ReLU()(emotions_feat)
@@ -896,4 +890,4 @@ class Model(nn.Module):
         else:
             print("There are no such kind of graph")
         return log_prob, neg_log_prob, neg_log_prob2, neg_log_prob3, features_a, features_l,  features_v, edge_index, edge_norm, edge_type, edge_index_lengths
-        # return log_prob, features_a, features_l,  features_v, edge_index, edge_norm, edge_type, edge_index_lengths
+
