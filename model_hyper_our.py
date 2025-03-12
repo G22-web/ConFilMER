@@ -95,10 +95,6 @@ class HyperGCN(nn.Module):
         self.return_feature = return_feature  #True
         self.use_residue = use_residue
         self.new_graph = new_graph
-
-        #self.graph_net = GCNII_lyc(nfeat=n_dim, nlayers=nlayers, nhidden=nhidden, nclass=nclass,
-        #                       dropout=dropout, lamda=lamda, alpha=alpha, variant=variant,
-        #                       return_feature=return_feature, use_residue=use_residue)
         self.act_fn = nn.ReLU()
         self.dropout = dropout
         self.alpha = alpha
@@ -251,7 +247,6 @@ class HyperGCN(nn.Module):
         if self.use_residue:
             out1 = torch.cat([features, out], dim=-1)                                   
         #out1 = self.reverse_features(dia_len, out1)
-        # neg_out = self.corruption(out) # 负样本
 
         '''High GCN'''
         gnn_edge_index, gnn_features = self.create_gnn_index(a, v, l, dia_len, self.modals)
@@ -274,9 +269,6 @@ class HyperGCN(nn.Module):
         for index in range(utt_len):
             key = x1[index, :]  # ":"表示选取该维度的所有元素，即选择该维度上的全部数据。 [512]
             s1 = self.utterance_selector(key, x1)  # 当前话语上下文相似度 [utt_len*3]
-            # s1 = self.utterance_selector_2(key, x1)
-            # print("上下文相似度2：")
-            # print(s1)
             s1 = s1.unsqueeze(1)
             s1 = s1.t()
             score1.append(s1)  # list类型：[utt_len*3]
@@ -319,7 +311,6 @@ class HyperGCN(nn.Module):
         if self.use_residue:
             out4 = torch.cat([features, out4], dim=-1)
         out4 = self.reverse_features(dia_len, out4)
-
 
         return out1, out2, out3, out4
         
