@@ -1,5 +1,14 @@
-# ConFilMER
-Accepted to ICASSP 2025! 
+# ENHANCED MULTIMODAL EMOTION RECOGNITION IN CONVERSATIONS VIA CONTEXTUAL FILTERING AND MULTI-FREQUENCY GRAPH PROPAGATION
+## Accepted by ICASSP 2025! 
+
+### Dataset
+
+The raw data can be found at [IEMOCAP](https://sail.usc.edu/iemocap/ "IEMOCAP") and [MELD](https://github.com/SenticNet/MELD "MELD").
+
+In our paper, we use pre-extracted features. The multimodal features (including RoBERTa-based and GloVe-based textual features) are available at [here](https://www.dropbox.com/sh/4b21lympehwdg4l/AADXMURD5uCECN_pvvJpCAy9a?dl=0 "here").
+
+We also provide some pre-trained checkpoints on RoBERTa-based IEMOCAP at [here](https://www.dropbox.com/sh/gd32s36v7l3c3u9/AACOipUURd7gEbEcdYSrmP-0a?dl=0 "here").
+
 
 Abstract:
 
