@@ -24,3 +24,17 @@ Run on MELD dataset:
 
 nohup python -u train_one.py --base-model 'GRU' --dropout 0.4 --lr 0.0001 --batch-size 16 --graph_type='hyper' --epochs=15 --graph_construct='direct' --multi_modal --use_modal --mm_fusion_mthd='concat_DHT' --modals='avl' --Dataset='MELD' --norm BN --num_L=3 --num_K=3 > train_one.log 2>&1 &
 
+## Citation
+
+If you find the repository useful, please cite the following paper:
+
+```bibtex
+@inproceedings{zhao2025enhanced,
+  title={Enhanced Multimodal Emotion Recognition in Conversations via Contextual Filtering and Multi-Frequency Graph Propagation},
+  author={Zhao, Huan and Gao, Yingxue and Chen, Haijiao and Li, Bo and Ye, Guanghui and Zhang, Zixing},
+  booktitle={ICASSP 2025-2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1--5},
+  year={2025},
+  organization={IEEE}
+}
+```
